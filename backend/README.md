@@ -67,13 +67,24 @@ One note before you delve into your tasks: for each endpoint, you are expected t
 8. Create a `POST` endpoint to get questions to play the quiz. This endpoint should take a category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions.
 9. Create error handlers for all expected errors including 400, 404, 422, and 500.
 
-## Documenting your Endpoints
+### API Documentation
 
-You will need to provide detailed documentation of your API endpoints including the URL, request parameters, and the response body. Use the example below as a reference.
+1. `Error Handling`
+Errors are returned as JSON objects in the following format:
+```json
+{
+    "success": False, 
+    "error": 400,
+    "message": "bad request"
+}
+```
+The API will return Four error types when requests fail:
 
-### Documentation Example
+`400: Bad Request` `404: Resource Not Found` `422: Unprocessable` `405: Method Not Allowed`
 
-`GET '/api/v1.0/categories'`
+2. `Endpoints`
+
+`GET '/categories'`
 
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
@@ -90,6 +101,164 @@ You will need to provide detailed documentation of your API endpoints including 
 }
 ```
 
+`DELETE '/questions/{id}'`
+
+
+- Deletes the question of the given ID if it exists. 
+- Request Arguments: `id`,integer
+- Returns: Returns success value.
+
+```json
+{
+  "success": true
+}
+```
+
+`POST "/questions"`
+
+- Creates a new question using the submitted title, answer, category and difficulty
+- Request Arguments: `"question"`, `"answer"` , `"category"` , `"difficulty"`
+- Returns: Returns success value.
+
+```json
+{
+  "success": true
+}
+```
+`POST /questions`
+
+- search for a question using the submitted search term.
+- Request Arguments: `"searchTerm"`
+- Returns: Returns the questions results paginated, success value, total questions.
+
+ 
+Sample curl http://127.0.0.1:5000/search -X POST -H "Content-Type: application/json" -d '{:"who"}'
+
+```json
+{
+  "questions": [
+    {
+      "answer": "Maya Angelou", 
+      "category": "4", 
+      "difficulty": 2, 
+      "id": 5, 
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": "4", 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": "1", 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 3
+}
+```
+
+`GET '/questions?page={integer}'`
+
+- Fetches a paginated set of questions, a total number of questions, all categories and current category string.
+- Request Arguments: `page` - integer
+- Returns: An object with 10 paginated questions, total questions, object including all categories, and current category string
+
+```json
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "This is a question",
+      "answer": "This is an answer",
+      "difficulty": 5,
+      "category": 2
+    }
+  ],
+  "totalQuestions": 100,
+  "categories": {
+    "1": "Science",
+    "2": "Art",
+    "3": "Geography",
+    "4": "History",
+    "5": "Entertainment",
+    "6": "Sports"
+  },
+}
+```
+
+`GET '/categories/{id}/questions'` 
+
+- get questions based on category.
+- Request Arguments: `id`, integer
+- Returns: Returns a list of questions paginated in groups of 10, category total_questions, success value and 
+current category.
+
+Sample: curl http://127.0.0.1:5000/categories/3/questions
+
+```json
+{
+  "success": true, 
+  "questions": [
+    {
+      "answer": "Lake Victoria", 
+      "category": "3", 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": "3", 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": "3", 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ], 
+  "total_questions": 3,
+  "current_category": "Geography"
+}
+```
+`POST '/quizzes'`
+
+- Sends a post request in order to get the next question
+- Request Body:
+
+```json
+{
+    'previous_questions': [1, 4, 20, 15]
+    'quiz_category': 'current category'
+}
+```
+- Returns: a single new question object
+
+Sample curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"quiz_category":{"type":"Geography","id":"3"}, "previous_questions":[13]}'
+
+```json
+{
+  "question": {
+    "answer": "Agra", 
+    "category": "3", 
+    "difficulty": 2, 
+    "id": 15, 
+    "question": "The Taj Mahal is located in which Indian city?"
+  }, 
+  "success": true
+}
+```
 ## Testing
 
 Write at least one test for the success and at least one error behavior of each endpoint using the unittest library.

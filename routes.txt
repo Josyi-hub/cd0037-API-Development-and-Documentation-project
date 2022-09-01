@@ -1,0 +1,33 @@
+'/categories' methods = ['GET'] donnée a envoyer:{categories}
+
+'/questions' methods = ['POST'] donnée recu:{question: this.state.question,
+        answer: this.state.answer,
+        difficulty: this.state.difficulty,
+        category: this.state.category,}
+
+'/questions?page=${this.state.page}' donnée recu:{page} methods = ['GET'] donnée a envoyer:{questions: result.questions,
+          totalQuestions: result.total_questions,
+          categories: result.categories,
+          currentCategory: result.current_category,}
+
+
+/categories/${id}/questions donnee recu:{id} methods = ['GET'] donnee a envoyer:{questions: result.questions,
+          totalQuestions: result.total_questions,
+          currentCategory: result.current_category,}
+
+
+research 
+'/questions' methods = ['POST'] donnée envoyé: {searchTerm: searchTerm} donnée a envoyer:{questions: result.questions,
+          totalQuestions: result.total_questions,
+          currentCategory: result.current_category,}
+
+
+ `/questions/${id}` methods = ['DELETE'] 
+
+ '/quizzes' methods = ['POST'] données recu = {previous_questions: previousQuestions,
+          quiz_category: this.state.quizCategory,} donnée a envoyer :{showAnswer: false,
+          previousQuestions: previousQuestions,
+          currentQuestion: result.question,
+          guess: '',
+          forceEnd: result.question ? false : true,}
+
